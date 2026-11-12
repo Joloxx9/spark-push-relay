@@ -144,7 +144,10 @@ func main() {
 
 func (a *app) routes() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write([]byte("ok\n")) })
+	ok := func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write([]byte("ok\n")) }
+	mux.HandleFunc("GET /healthz", ok)
+	// Pangolin's target health check asks for / by default.
+	mux.HandleFunc("GET /{$}", ok)
 	mux.HandleFunc("POST /v1/deployments/register", a.handleRegister)
 	mux.HandleFunc("POST /v1/deployments/renew", a.handleAdvance(false))
 	mux.HandleFunc("POST /v1/deployments/rotate", a.handleAdvance(true))
