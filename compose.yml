@@ -1,0 +1,23 @@
+# Spark push relay. Pangolin publishes it as https://push.atlaslab.uk; the
+# port below is what Pangolin's resource points at (through Newt on Unraid,
+# or straight at this host).
+#
+#   cp relay.env.example relay.env     # then fill it in
+#   docker compose up -d
+
+name: spark-relay
+
+services:
+  spark-relay:
+    image: ghcr.io/joloxx9/spark-relay:latest
+    container_name: spark-relay
+    restart: unless-stopped
+    # Unraid's nobody:users; the data folder must belong to it.
+    user: "99:100"
+    env_file: relay.env
+    ports:
+      - "9099:8080"
+    volumes:
+      - /mnt/user/appdata/spark-relay/data:/data
+      # APNs .p8 key and Firebase service account JSON, read-only.
+      - /mnt/user/appdata/spark-relay/secrets:/secrets:ro
