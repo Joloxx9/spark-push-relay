@@ -5,8 +5,9 @@ Delivers a Spark server's push notifications to phones and TVs:
 - **Spark apps** on iPhone, iPad, Apple TV and Mac through APNs, with the
   `.p8` key of the Apple Developer account that signs them;
 - **Spark app** on Android through Firebase Cloud Messaging;
-- **official Silo apps**: their Apple pushes go on to the official Silo relay
-  (`push.siloserver.org`), where this relay registers as one deployment.
+- optionally the **official Silo apps**: with `FORWARD_RELAY_URL` set, their
+  Apple pushes go on to the official Silo relay, where this relay registers as
+  one deployment. Off by default; Spark servers accept only the Spark apps.
 
 It speaks the relay protocol Silo servers already use, so a Spark server needs
 no changes: it registers on first push (`/v1/deployments/register`), renews
@@ -28,8 +29,8 @@ docker compose up -d
 curl http://localhost:9099/healthz   # ok
 ```
 
-Without an APNs key or Firebase account the relay still runs: it forwards the
-official Silo apps' pushes and answers Spark-app pushes with a clear error.
+Without an APNs key or Firebase account the relay still runs and answers
+Spark-app pushes with a clear error.
 
 ## Pangolin
 
